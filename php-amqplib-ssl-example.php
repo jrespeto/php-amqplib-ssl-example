@@ -12,7 +12,7 @@ $HOST = 'somehost.com';
 $PORT = '5671';
 $USERNAME = 'guest';
 $PASSWORD = 'guest';
-$VHOST = '/'
+$VHOST = '/';
 
 // $SSL_OPTIONS is used to created the ssl context 
 // https://www.php.net/manual/en/context.ssl.php
@@ -39,21 +39,21 @@ $OPTIONS = array(
 	'heartbeat'           => 15,    // default is 0 
 );
 
-$SSL_PROTOCOL = 'ssl' // This is the default not needed here and is the last positional argument in AMQPSSLConnection(). 
+$SSL_PROTOCOL = 'ssl'; // This is the default not needed here and is the last positional argument in AMQPSSLConnection(). 
 
 // https://github.com/php-amqplib/php-amqplib/blob/af811747aaeed7b71c171c88d69ac17d2d5f94c1/PhpAmqpLib/Connection/AMQPSSLConnection.php
 $CONNECTION = new AMQPSSLConnection($HOST,$PORT,$USERNAME,$PASSWORD,$VHOST,$SSL_OPTIONS,$OPTIONS,$SSL_PROTOCOL);
 $CHANNEL = $CONNECTION->channel();
 
+$MSG_BODY = '{"Massage":"Hello World!!"}';
+
+//Make the message 
+$MSG = new AMQPMessage($MSG_BODY, array('content_type' => 'text/plain', 'delivery_mode' => 2));
 
 // /PhpAmqpLib/Channel/AMQPChannel.php
 // routing_key is the third arg for basic_publish not queue name  
 $EXCHANGE = 'exchange_name';
 $ROUTING_KEY = 'routing_key';
-
-$MSG_BODY = '{"Massage":"Hello World!!"}';
-//Make the message 
-$MSG = new AMQPMessage($MSG_BODY, array('content_type' => 'text/plain', 'delivery_mode' => 2));
 
 // Send the Message 
 $CHANNEL->basic_publish($MSG, $EXCHANGE, $ROUTING_KEY);
